@@ -2,7 +2,8 @@ package main
 
 import (
 	"fmt"
-	stringHelper "hello-world/helper"
+	"validator"
+	"hello-world/helper"
 )
 
 // trong projet chỉ nên có 1 file main.go
@@ -13,5 +14,10 @@ import (
 
 func main() {
 	fmt.Println("this is a main function")
-	stringHelper.ConvertStringToInt()
+	helper.ConvertStringToInt()
+	
+	validator.CheckValidEmail()
+	validator.CheckValidPhone()
 }
+
+// go install -> bin. dong goi src
