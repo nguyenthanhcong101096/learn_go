@@ -66,4 +66,7 @@ func main(){
 
 	copy(dest, src)
 	fmt.Println(dest)
+
+	// delete item with index 1
+	src = append(src[:1], src[2:]...) // slice - slice = append(slice1, slice2...)
 }
