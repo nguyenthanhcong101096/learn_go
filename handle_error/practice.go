@@ -12,8 +12,7 @@ type Standard struct {
 }
 
 func (a Standard) messages() {
-	fmt.Println(a.code)
-	fmt.Println(a.message)
+	fmt.Printf("code: %v, message: %v", a.code, a.message)
 }
 
 func new(code int, message string) Error {
