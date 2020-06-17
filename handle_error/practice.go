@@ -1,9 +1,13 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+)
 
+//======Define Error Variable=====//
 type Error interface {
-	messages()
+	full_message()
+	valid() bool
 }
 
 type Standard struct {
@@ -11,31 +15,59 @@ type Standard struct {
 	message string
 }
 
-func (a Standard) messages() {
-	fmt.Printf("code: %v, message: %v", a.code, a.message)
+func (s Standard) full_message() {
+	fmt.Printf("{ code: %v, message: %v}", s.code, s.message)
 }
 
-func new(code int, message string) Error {
+func (s Standard) valid() bool {
+	if s.code == 200 {
+		return true
+	}
+	return false
+}
+
+func New(code int, message string) Error {
 	return Standard{code, message}
 }
 
 var (
-	RecordNotFound  = new(404, "ActiveRecord::RecordNotFound")
-	RecordNotUnique = new(409, "ActiveRecord::RecordNotUnique")
+	NotFound = New(404, "Not Found")
+	Success  = New(200, "Success")
+	Conflic  = New(409, "Conflic")
 )
 
-// create user
+//======End Define Error Variable=====//
 
-func createUser(b bool) Error {
-	if b {
-		return RecordNotFound
-	}
+type ActiveRecord interface {
+	update(params map[string]string) Error
+}
 
-	return RecordNotUnique
+type User struct {
+	name  string
+	phone string
+}
+
+
+func (u *User) update(params map[string]string) Error {
+	u.name = params["name"]
+	u.phone = params["phone"]
+
+	return Success
 }
 
 func main() {
-	if err := createUser(true); err != nil {
-		err.messages()
+	user := User{"Nguyen thanh cong", "0338529345"}
+
+	var model ActiveRecord = &user
+	var params = map[string]string{"name": "Tran thi lien", "phone": "1234535"}
+
+	fmt.Println(user)
+
+	updated := model.update(params)
+	
+	if updated.valid() {
+		fmt.Println("Cập nhật thành công")
+	} else {
+		updated.full_message()		
 	}
 }

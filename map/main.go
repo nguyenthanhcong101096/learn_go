@@ -2,15 +2,15 @@ package main
 
 import "fmt"
 
-func main(){
+func main() {
 	var myMap = make(map[string]int)
-	fmt.Println(myMap) 
+	fmt.Println(myMap)
 
 	var myMap1 map[string]int
 	fmt.Println(myMap1)
 
 	// khai báo với giá trị khởi tạo
-	myMap2 := map[string]int {"cong": 1, "lien": 2}
+	myMap2 := map[string]int{"cong": 1, "lien": 2}
 	fmt.Println(myMap2)
 
 	// add item
@@ -18,7 +18,7 @@ func main(){
 	myMap2["key2"] = 2
 	fmt.Println(myMap2)
 
-	// delete item 
+	// delete item
 	delete(myMap2, "key1")
 	fmt.Println(myMap2)
 
