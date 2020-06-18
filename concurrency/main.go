@@ -5,15 +5,22 @@ package main
 import (
 	"fmt"
 	"sync"
+	"time"
 )
 
 func g1() {
-	fmt.Println("G1")
+	for {
+		fmt.Println("AAA")
+		time.Sleep(time.Second * 1)
+	}
 	wg.Done() // tín hiệu cho bik goroutines xong
 }
 
 func g2() {
-	fmt.Println("G2")
+	for {
+		fmt.Println("BBB")
+		time.Sleep(time.Second * 2)
+	}
 	wg.Done() // tín hiệu cho bik goroutines xong
 }
 
@@ -23,12 +30,12 @@ func main() {
 	// go function_name()
 	// Synchronized goroutines
 
-	fmt.Println("Bắt đầu")  // log1
+	fmt.Println("Bắt đầu") // log1
 
-	wg.Add(2)               // tạo group 2 gorouties
+	wg.Add(2) // tạo group 2 gorouties
 
-	go g1()                 // g1()
-	go g2()                 // g2()
+	go g1() // g1()
+	go g2() // g2()
 
 	wg.Wait()
 
