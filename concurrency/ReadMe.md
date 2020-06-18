@@ -63,4 +63,32 @@ Khi 2 thread cùng chờ resource lẫn nhau
 
 > Giao tiếp giữa Go routine thì k trực tiếp chia sẽ bộ nhớ
 
+### Go Scheduler
+- Thành phần của **GoScheduler**
+  - **Goroutine**
+  - **Machine** (`Worker thread` or `OS thread`) -> Tạo ra và control bởi HĐH
+  - **Process** (`context`)
+  		-  `local runq` luôn tồn tại (chứa các go routines của chương trình)
+  		-  `global` k gắn trục tiếp vào `process`. nó được dùng khi `local runq` k thể chứa hết goroutines -> đẩy `goroutines` vào `global runq`
+
+
+#### Khởi tạo chương trình
+Ví dụ tạo 2 Process (`GOMAXPROCS(2)`)
+
+- go runtime sẽ tạo **Machine(M)** gắn với **Process(P)**
+- **Process(P)** không trực tiếp xử lý mà **Machine(M)** sẽ xử lý
+
+Tạo 4 gorouties
+
+```
+func g1() { fmt.Println("G1") }
+func g2() { fmt.Println("G2") }
+func g3() { fmt.Println("G3") }
+func g4() { fmt.Println("G4") }
+```
+
+Mô hình 
+
+![](https://lh3.googleusercontent.com/c9XzMl-vIFj_26Xa0GFeYTIPtNsstanNmQg2-jdLPEtXzH6IXEjrrIEAYYguq90IlEs-v5bz0yds-q9jF0XuAFzhS-X1eAyHcgrRsFJp7hbx4S3uDVSoj8--TxkPCGRpJKXWP6ctT33JQkYwbowe8FeH6g8ZdKVYXbZ3F4XtZT7HTv2ylcwgIBbH_wZK8XdmS0u5q3GcKyrsTIgurHyohGbe9mjn7avaXGyDXz9ML39qsgrQYVXmMBWykEoXg8Cxp8BTERGRcUvbw1_e57p3Yaa_EWm5zHf5euJswcPKtlaZaWGjsyvJQenXz3AGLhAVn8tr33qD0h3eNuFcM1mNy5XcI2SlxK6SEJOZawq83rx4MIwhg0wsspfOZPGspk9gWdc3oB_9Xfs3wEx7c1DDLTo9T0yn_CBULdWvnw97_9g1jl1L1iatqmSXVz69IL1cp5VIYcctR0mdviGbmTW7mg9F6-RymnvvOzN_kh2gMKWdxkJpRiLk6gv2YKq7wn_OGOuOP5S1UDabyJDYxuQVGSd9pCMUK92SBJNO2XE4h8CJ1PNSeeMFpBYIPZfzY10QVL_emXSvb2peYspp0DtJPOee-4g-qMBk1z7aQG2HUVONdFNprLsDUzQ-GC4Tex0Y59IlCv9PfWGOYL8FPAI6blCyFDSyyboXL2tyXvD42maUbrqsjWdEjLt5R-zD=w878-h479-no?authuser=1)
+
 
