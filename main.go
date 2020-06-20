@@ -1,38 +1,37 @@
 package main
 
 import (
-	"fmt"
-	"time"
+  "unicode"
+  "strings"
 )
 
-func pinger(c chan string) {
-	for i := 0; ; i++ {
-		c <- "ping"
-	}
-}
+func isPalindrome(str string) bool {
+  start := 0
+  end := len(str) - 1
 
-func printer(c chan string) {
-	for {
-		msg := <-c
-		fmt.Println(msg)
-		time.Sleep(time.Second * 1)
-	}
-}
+  str = strings.ToLower(str)
 
-func goroutines1() {
-	
-}
+  for start < end {
+  
+    for !unicode.IsLetter([]rune(str)[start]) {
+      start++
+    }
+    for !unicode.IsLetter([]rune(str)[end]) {
+      end--
+    }
+    
+    if []rune(str)[start] != []rune(str)[end] {
+      return false
+    }
 
-func goroutines2() {
+    start++
+    end--
+  }
 
+  return true
 }
 
 func main() {
-	var c chan string = make(chan string)
-
-	go pinger(c)
-	go printer(c)
-
-	var input string
-	fmt.Scanln(&input)
+  str := "A man, a plan, a canal: Panama"
+  isPalindrome(str)
 }
