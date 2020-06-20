@@ -29,5 +29,4 @@ func main() {
 	arr, err := repo.Select()
 
 	fmt.Println(arr)
-	fmt.Println(err)
 }

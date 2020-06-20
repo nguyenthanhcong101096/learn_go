@@ -2,7 +2,6 @@ package repoiml
 
 import (
 	"database/sql"
-	"fmt"
 	models "go_postgres/model"
 	repo "go_postgres/repository"
 )
@@ -28,7 +27,6 @@ func (u *UserRepoIml) Select() ([]models.User, error) {
 
 	for rows.Next() {
 		user := models.User{}
-		fmt.Println(rows)
 		err := rows.Scan(&user.Id, &user.Email, &user.Role)
 
 		if err != nil {
