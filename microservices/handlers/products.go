@@ -20,13 +20,18 @@ func (p *Products) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-  //handle an update
+	if r.Method == http.MethodPost {
+		p.addProducts(rw, r)
+		return
+	}
 
 	//catch all
 	rw.WriteHeader(http.StatusMethodNotAllowed)
 }
 
 func (p *Products) getProducts(rw http.ResponseWriter, r *http.Request) {
+	p.l.Println("Handle GET")
+
 	lg := data.GetProducts()
 	err := lg.ToJSON(rw)
 
@@ -35,5 +40,20 @@ func (p *Products) getProducts(rw http.ResponseWriter, r *http.Request) {
 	} else {
 		rw.Header().Set("Content-Type", "application/json")
 		rw.WriteHeader(200)
+	}
+}
+
+func (p *Products) addProducts(rw http.ResponseWriter, r *http.Request) {
+	p.l.Println("Handle POST")
+
+	prod := &data.Product{}
+	err := prod.FromJSON(r.Body)
+
+	if err != nil {
+		http.Error(rw, "Khong the convert JSON", http.StatusBadRequest)
+	} else {
+		data.AddProduct(prod)
+		rw.WriteHeader(200)
+		p.l.Println(prod)
 	}
 }
