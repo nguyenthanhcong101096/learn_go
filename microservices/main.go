@@ -12,13 +12,13 @@ import (
 
 func main() {
 	l := log.New(os.Stdout, "product-api", log.LstdFlags)
-	hh := handlers.NewHello(l)
-	gh := handlers.NewGoodbye(l)
+	// hh := handlers.NewHello(l)
+	// gh := handlers.NewGoodbye(l)
 	ph := handlers.NewProducts(l)
 
 	router := http.NewServeMux()
-	router.Handle("/", hh)
-	router.Handle("/cong", gh)
+	// router.Handle("/", hh)
+	// router.Handle("/cong", gh)
 	router.Handle("/products", ph)
 
 	s := &http.Server{
