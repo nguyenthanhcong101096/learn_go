@@ -53,10 +53,6 @@ func runWithValue() {
 	withValueA(ctx)
 }
 
-func withCancel() {
-
-}
-
 func runWithCancel() {
 	ctx, cancel := context.WithCancel(context.Background())
 	time.AfterFunc(time.Second, func() {

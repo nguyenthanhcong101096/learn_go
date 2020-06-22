@@ -1,37 +1,32 @@
 package main
 
 import (
-  "unicode"
-  "strings"
+	"fmt"
+	"math/rand"
 )
 
-func isPalindrome(str string) bool {
-  start := 0
-  end := len(str) - 1
+func go1(channel chan int) {
+	for {
+		channel <- rand.Intn(100)
+		fmt.Println(rand.Intn(100))
+	}
+}
 
-  str = strings.ToLower(str)
-
-  for start < end {
-  
-    for !unicode.IsLetter([]rune(str)[start]) {
-      start++
-    }
-    for !unicode.IsLetter([]rune(str)[end]) {
-      end--
-    }
-    
-    if []rune(str)[start] != []rune(str)[end] {
-      return false
-    }
-
-    start++
-    end--
-  }
-
-  return true
+func go2(channel chan int) {
+	for {
+		value := <-channel
+		if value == 2 {
+			fmt.Println("Random 2")
+			return
+		}
+	}
 }
 
 func main() {
-  str := "A man, a plan, a canal: Panama"
-  isPalindrome(str)
+	channel := make(chan int)
+	go go1(channel)
+	go go2(channel)
+
+	var input string
+	fmt.Scanln(&input)
 }
