@@ -11,11 +11,11 @@ import (
 
 func main() {
 	router := mux.NewRouter()
-	userN  := models.User{Id: "1", Email: "nguyenthanhcong"}
+	userN := models.User{Id: "1", Email: "nguyenthanhcong"}
 
 	repo.CreateUser(&userN)
 
-  router.HandleFunc("/api/v1/user/find", api.FindUser).Methods("GET")
+	router.HandleFunc("/api/v1/user/find", api.FindUser).Methods("GET")
 
 	err := http.ListenAndServe(":5000", router)
 	if err != nil {
