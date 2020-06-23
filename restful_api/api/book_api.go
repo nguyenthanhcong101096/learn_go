@@ -14,8 +14,8 @@ func init() {
 }
 
 func Index(rw http.ResponseWriter, r *http.Request) {
-	stores := books.All()
-	err := stores.ToJSON(rw)
+	books := books.All()
+	err := books.ToJSON(rw)
 
 	if err != nil {
 		http.Error(rw, "Can not convert to JSON", http.StatusInternalServerError)
