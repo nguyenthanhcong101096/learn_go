@@ -31,19 +31,15 @@ func (p *Products) GetProducts(rw http.ResponseWriter, r *http.Request) {
 }
 
 func (p *Products) AddProducts(rw http.ResponseWriter, r *http.Request) {
-  prod := r.Context().Value(KeyProduct{}).(data.Product)
-  
-	if err != nil {
-		http.Error(rw, "Khong the convert JSON", http.StatusBadRequest)
-	} else {
-		data.AddProduct(prod)
-		rw.WriteHeader(200)
-		p.l.Println(prod)
-	}
+	prod := r.Context().Value(KeyProduct{}).(data.Product)
+	data.AddProduct(&prod)
+	rw.WriteHeader(200)
+	p.l.Println(prod)
 }
 
 func (p *Products) UpdateProducts(rw http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
+	prod := r.Context().Value(KeyProduct{}).(data.Product)
 
 	id, err := strconv.Atoi(vars["id"])
 
@@ -52,7 +48,7 @@ func (p *Products) UpdateProducts(rw http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = data.UpdateProduct(id, prod)
+	err = data.UpdateProduct(id, &prod)
 
 	if err == data.ProductNotFound || err != nil {
 		http.Error(rw, "Khong tim thay", http.StatusNotFound)
@@ -66,7 +62,7 @@ type KeyProduct struct{}
 
 func (p Products) MiddlewareProductValidation(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(rw http.ResponseWriter, r *http.Request) {
-		prod := &data.Product{}
+		prod := data.Product{}
 		err := prod.FromJSON(r.Body)
 
 		if err != nil {
@@ -74,8 +70,8 @@ func (p Products) MiddlewareProductValidation(next http.Handler) http.Handler {
 			return
 		}
 
-		ctx := context.WithValue(context.Background(), KeyProduct{}, prod)
-		req := r.WithContext(ctx)
+		ctx := context.WithValue(r.Context(), KeyProduct{}, prod)
+		r = r.WithContext(ctx)
 
 		next.ServeHTTP(rw, r)
 	})
