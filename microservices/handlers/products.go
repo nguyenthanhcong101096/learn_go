@@ -4,8 +4,9 @@ import (
 	"log"
 	data "microservices/data"
 	"net/http"
-	"regexp"
 	"strconv"
+
+	"github.com/gorilla/mux"
 )
 
 type Products struct {
@@ -42,19 +43,12 @@ func (p *Products) AddProducts(rw http.ResponseWriter, r *http.Request) {
 }
 
 func (p *Products) UpdateProducts(rw http.ResponseWriter, r *http.Request) {
-	reg := regexp.MustCompile(`/([0-9]+)`)
-	g := reg.FindAllStringSubmatch(r.URL.Path, -1)
+	vars := mux.Vars(r)
 
-	if len(g) != 1 || len(g[0]) != 2 {
-		http.Error(rw, "Invalid URI", http.StatusBadRequest)
-		return
-	}
-
-	idString := g[0][1]
-	id, err := strconv.Atoi(idString)
+	id, err := strconv.Atoi(vars["id"])
 
 	if err != nil {
-		http.Error(rw, "Invalid URI", http.StatusBadRequest)
+		http.Error(rw, "Unable convert to id", http.StatusBadRequest)
 		return
 	}
 

@@ -23,7 +23,7 @@ func main() {
 
 	router.HandleFunc("/", ph.GetProducts).Methods(http.MethodGet)
 	router.HandleFunc("/product", ph.AddProducts).Methods(http.MethodPost)
-	router.HandleFunc("/product/{id}", ph.UpdateProducts).Methods(http.MethodPut)
+	router.HandleFunc("/product/{id:[0-9]+}", ph.UpdateProducts).Methods(http.MethodPut)
 
 	// create new server
 	s := &http.Server{
