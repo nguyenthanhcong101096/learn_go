@@ -4,6 +4,7 @@ import (
 	"log"
 	data "microservices/data"
 	"net/http"
+	"regexp"
 	"strconv"
 )
 
@@ -15,43 +16,7 @@ func NewProducts(l *log.Logger) *Products {
 	return &Products{l}
 }
 
-func (p *Products) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
-	if r.Method == http.MethodGet {
-		p.getProducts(rw, r)
-		return
-	}
-
-	if r.Method == http.MethodPost {
-		p.addProducts(rw, r)
-		return
-	}
-
-	if r.Method == http.MethodPut {
-		p.l.Println(r.URL.Path)
-		ids, ok := r.URL.Query()["id"]
-
-		if !ok || len(ids) < 1 {
-			http.Error(rw, "Invalid URI", http.StatusBadRequest)
-			return
-		}
-
-		id, err := strconv.Atoi(ids[0])
-
-		if err != nil {
-			http.Error(rw, "Invalid URI", http.StatusBadRequest)
-			return
-		}
-
-		p.updateProducts(id, rw, r)
-	}
-
-	//catch all
-	rw.WriteHeader(http.StatusMethodNotAllowed)
-}
-
-func (p *Products) getProducts(rw http.ResponseWriter, r *http.Request) {
-	p.l.Println("Handle GET")
-
+func (p *Products) GetProducts(rw http.ResponseWriter, r *http.Request) {
 	lg := data.GetProducts()
 	err := lg.ToJSON(rw)
 
@@ -63,9 +28,7 @@ func (p *Products) getProducts(rw http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func (p *Products) addProducts(rw http.ResponseWriter, r *http.Request) {
-	p.l.Println("Handle POST")
-
+func (p *Products) AddProducts(rw http.ResponseWriter, r *http.Request) {
 	prod := &data.Product{}
 	err := prod.FromJSON(r.Body)
 
@@ -78,11 +41,25 @@ func (p *Products) addProducts(rw http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func (p *Products) updateProducts(id int, rw http.ResponseWriter, r *http.Request) {
-	p.l.Println("Handle PUT")
+func (p *Products) UpdateProducts(rw http.ResponseWriter, r *http.Request) {
+	reg := regexp.MustCompile(`/([0-9]+)`)
+	g := reg.FindAllStringSubmatch(r.URL.Path, -1)
+
+	if len(g) != 1 || len(g[0]) != 2 {
+		http.Error(rw, "Invalid URI", http.StatusBadRequest)
+		return
+	}
+
+	idString := g[0][1]
+	id, err := strconv.Atoi(idString)
+
+	if err != nil {
+		http.Error(rw, "Invalid URI", http.StatusBadRequest)
+		return
+	}
 
 	prod := &data.Product{}
-	err := prod.FromJSON(r.Body)
+	err = prod.FromJSON(r.Body)
 
 	if err != nil {
 		http.Error(rw, "Khong the convert JSON", http.StatusBadRequest)
