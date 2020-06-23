@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"context"
 	"log"
 	data "microservices/data"
 	"net/http"
@@ -30,9 +31,8 @@ func (p *Products) GetProducts(rw http.ResponseWriter, r *http.Request) {
 }
 
 func (p *Products) AddProducts(rw http.ResponseWriter, r *http.Request) {
-	prod := &data.Product{}
-	err := prod.FromJSON(r.Body)
-
+  prod := r.Context().Value(KeyProduct{}).(data.Product)
+  
 	if err != nil {
 		http.Error(rw, "Khong the convert JSON", http.StatusBadRequest)
 	} else {
@@ -52,18 +52,31 @@ func (p *Products) UpdateProducts(rw http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	prod := &data.Product{}
-	err = prod.FromJSON(r.Body)
-
-	if err != nil {
-		http.Error(rw, "Khong the convert JSON", http.StatusBadRequest)
-		return
-	}
-
 	err = data.UpdateProduct(id, prod)
 
 	if err == data.ProductNotFound || err != nil {
 		http.Error(rw, "Khong tim thay", http.StatusNotFound)
 		return
 	}
+}
+
+// middleware
+
+type KeyProduct struct{}
+
+func (p Products) MiddlewareProductValidation(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(rw http.ResponseWriter, r *http.Request) {
+		prod := &data.Product{}
+		err := prod.FromJSON(r.Body)
+
+		if err != nil {
+			http.Error(rw, "Khong the convert JSON", http.StatusBadRequest)
+			return
+		}
+
+		ctx := context.WithValue(context.Background(), KeyProduct{}, prod)
+		req := r.WithContext(ctx)
+
+		next.ServeHTTP(rw, r)
+	})
 }
