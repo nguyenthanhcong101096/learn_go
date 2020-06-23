@@ -27,7 +27,11 @@ func main() {
 	middle_router.Use(ph.MiddlewareProductValidation)
 
 	middle_router.HandleFunc("", ph.AddProducts).Methods(http.MethodPost)
-	middle_router.HandleFunc("/{id:[0-9]+}", ph.UpdateProducts).Methods(http.MethodPut)
+	middle_router.HandleFunc("/{id:[0-9]+}", ph.UpdateProducts).Methods(http.MethodPut).Name("Update")
+
+	middle_token := router.PathPrefix("/me").Subrouter()
+	middle_token.HandleFunc("", ph.Profile).Methods(http.MethodGet)
+	middle_token.Use(ph.Authenticate)
 
 	// create new server
 	s := &http.Server{

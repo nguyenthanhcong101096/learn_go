@@ -56,6 +56,12 @@ func (p *Products) UpdateProducts(rw http.ResponseWriter, r *http.Request) {
 	}
 }
 
+func (p Products) Profile(rw http.ResponseWriter, r *http.Request) {
+	rw.Header().Set("Content-Type", "application/json")
+	rw.WriteHeader(http.StatusOK)
+	rw.Write([]byte(`{"message": "My Profile"}`))
+}
+
 // middleware
 
 type KeyProduct struct{}
@@ -74,5 +80,21 @@ func (p Products) MiddlewareProductValidation(next http.Handler) http.Handler {
 		r = r.WithContext(ctx)
 
 		next.ServeHTTP(rw, r)
+	})
+}
+
+var tokens = map[string]string{"user1": "user1", "user2": "user2", "user3": "user3"}
+
+func (p Products) Authenticate(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(rw http.ResponseWriter, r *http.Request) {
+		token := r.Header.Get("X-Session-Token")
+
+		if _, ok := tokens[token]; ok {
+			next.ServeHTTP(rw, r)
+		} else {
+			rw.Header().Set("Content-Type", "application/json")
+			rw.WriteHeader(http.StatusForbidden)
+			rw.Write([]byte(`{"message": "Authenticate fail"}`))
+		}
 	})
 }
