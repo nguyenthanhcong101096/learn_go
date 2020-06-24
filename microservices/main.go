@@ -23,6 +23,7 @@ func main() {
 
 	router.HandleFunc("/", ph.GetProducts).Methods(http.MethodGet)
 
+	//////////// Router API /////////////
 	middle_router := router.PathPrefix("/product").Subrouter()
 	middle_router.Use(ph.MiddlewareProductValidation)
 
@@ -32,6 +33,11 @@ func main() {
 	middle_token := router.PathPrefix("/me").Subrouter()
 	middle_token.HandleFunc("", ph.Profile).Methods(http.MethodGet)
 	middle_token.Use(ph.Authenticate)
+	/////////////////////////////////
+
+	////////// render static file //////////
+	router.PathPrefix("/").Handler(http.StripPrefix("/static/", http.FileServer(http.Dir("./dir"))))
+	/////////////////////////////////
 
 	// create new server
 	s := &http.Server{
