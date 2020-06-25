@@ -2,25 +2,33 @@ package main
 
 import (
 	"context"
-	"fmt"
+	"net/http"
 )
 
-func GetValue1(ctx context.Context, key string) {
-	value := ctx.Value(key)
-	fmt.Println(value)
+func Welcome(rw http.ResponseWriter, r *http.Request) {
+	//handler này sẽ lấy value từ context middlware
+	//pass request-scope value MiddleWareCheckLogin
 
-	ctx1 := context.WithValue(ctx, "key2", "key2")
-	GetValue2(ctx1, "key2")
+	user := r.Context().Value("user_1")
+	if user != nil {
+		rw.Write([]byte("Hello sir"))
+	} else {
+		rw.Write([]byte("Hello guide"))
+	}
 }
 
-func GetValue2(ctx context.Context, key string) {
-	value := ctx.Value(key)
-	fmt.Println(value)
+func MiddleWareCheckLogin(next http.Handler) http.Handler {
+	check := func(rw http.ResponseWriter, r *http.Request) {
+		ctx := context.WithValue(context.Background(), "user_1", "ttlcong")
+		req := r.WithContext(ctx)
+		next.ServeHTTP(rw, req)
+	}
+
+	return http.HandlerFunc(check)
 }
 
 func main() {
-	// Trao đổi dữ liệu giữa các func thông qua context value
-	// Chỉ sử dụng WithValue cho dữ liệu trong scope request transit API, không phải để truyền tham số tùy chọn cho các hàm.
-	ctx := context.WithValue(context.Background(), "key1", "key1")
-	GetValue1(ctx, "key1")
+	welcomeHalder := http.HandlerFunc(Welcome)
+	http.Handle("/welcome", MiddleWareCheckLogin(welcomeHalder))
+	http.ListenAndServe(":8080", nil)
 }
