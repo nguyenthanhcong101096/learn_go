@@ -6,24 +6,36 @@ import (
 	"time"
 )
 
-// Muốn request này complete trong 2s, nếu sau 2s thì sẽ tự cancel
-func RequestAPI() {
-	ctx, _ := context.WithTimeout(context.Background(), time.Second*6)
-	wait := make(chan bool)
+// Mong muốn request này complete trong 2s. nếu quá 2s sẽ dừng nó
+func RequestAPI() error {
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second*3)
+	defer cancel()
 
 	go func() {
 		select {
+		// nếu request quá lâu thì channel này sẽ đóng và canceled
 		case <-ctx.Done():
-			fmt.Println(ctx.Err())
-			wait <- true
-			break
+			fmt.Println("Request to timeout")
+			return
 		}
 	}()
 
-	<-wait
+	// code body xử lý logic
+	RequestToServer()
 
-	//giã sử cho nó request mấy 3s mới xử lý xong
-	time.Sleep(time.Second * 3)
+	// check nếu channel close thì dừng function lại
+	if err := ctx.Err(); err != nil {
+		return err
+	}
+
+	fmt.Println("Connect successfully")
+	return nil
+}
+
+// Giã sử cho nó request mất 2s mới xử lý xong
+func RequestToServer() {
+	fmt.Println("Connect to Server ....!")
+	time.Sleep(time.Second * 2)
 }
 
 func main() {

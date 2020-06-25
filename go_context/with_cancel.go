@@ -17,7 +17,7 @@ import (
 func DownloadFromGoogle(ctx context.Context) error {
 	// set time out khoảng 1 s
 	// sau 1s mà chưa complete thì -> error
-	timeout, _ := context.WithTimeout(ctx, time.Millisecond*100)
+	timeout, _ := context.WithTimeout(ctx, time.Millisecond*1)
 
 	req, _ := http.NewRequest(http.MethodGet, "http://google.com", nil)
 	req = req.WithContext(timeout)
@@ -26,16 +26,15 @@ func DownloadFromGoogle(ctx context.Context) error {
 
 	res, err := client.Do(req)
 
-	if err == nil {
-		fmt.Println("Respone Received status code", res.StatusCode)
-		return nil
+	if err != nil {
+		fmt.Println("Request fail: ", err)
+		return err
 	}
 
-	fmt.Println("Request fail: ", err)
 	time.Sleep(3 * time.Second)
-
+	fmt.Println("Respone Received status code", res.StatusCode)
 	// giả lập gọi tới google mất hết 100s -> time out
-	return err
+	return nil
 }
 
 func ExtraFile(ctx context.Context) {
