@@ -138,3 +138,5 @@ context deadline exceeded
 ```
 
 [Demo Here](https://github.com/nguyenthanhcong101096/training_go/blob/master/go_context/with_timeout.go)
+
+[Nguồn](https://golangbyexample.com/using-context-in-golang-complete-guide/)
