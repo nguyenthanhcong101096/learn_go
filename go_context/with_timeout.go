@@ -8,7 +8,7 @@ import (
 
 // Mong muốn request này complete trong 2s. nếu quá 2s sẽ dừng nó
 func RequestAPI() error {
-	ctx, cancel := context.WithTimeout(context.Background(), time.Second*3)
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second*1)
 	defer cancel()
 
 	go func() {

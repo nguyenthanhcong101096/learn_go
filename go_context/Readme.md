@@ -82,6 +82,8 @@ context canceled
 
 > task function will gracefully exit once the cancelFunc is called. Once the cancelFunc is called, the error string is set to "context cancelled" by the context package. That is why the output of ctx.Err() is "context cancelled"
 
+[Demo Here](https://github.com/nguyenthanhcong101096/training_go/blob/master/go_context/with_cancel.go)
+
 ## context.WithTimeout()
 Used for time-based cancellation
 
