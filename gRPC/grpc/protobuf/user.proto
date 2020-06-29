@@ -1,0 +1,34 @@
+syntax  = "proto3";
+
+package rpc;
+
+message AccessToken {
+  string access_token = 1;
+}
+
+message Credentials {
+  string username = 1;
+  string password = 2;
+}
+
+message FromRegister {
+  string first_name = 1;
+  string last_name = 2;
+  string email =3;
+  string passwotd =4;
+}
+
+message RegisterResult {
+  bool ok = 1;
+  AccessToken data = 2;
+}
+
+message LoginResult{
+    bool ok = 1;
+    AccessToken data = 2;
+}
+
+service User{
+  rpc UserLogin(Credentials) returns (LoginResult);
+  rpc UserRegister(FromRegister) returns (RegisterResult);
+}
