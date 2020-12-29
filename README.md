@@ -1,6 +1,7 @@
 ## Bookmark
 - [Go – Lập trình Go | Phở Code](https://phocode.com/golang/go-lap-trinh-go/)
 - [Go - golangprograms.com](http://golangprograms.com)
+- [The Ultimate Go Study Guide](https://github.com/ardanlabs/gotraining-studyguide)
 - [Build web application with golang](https://github.com/astaxie/build-web-application-with-golang)
 - [Go by Example](https://gobyexample.com)
 - [Parse CSV Data Using The Go Programming Language](https://www.thepolyglotdeveloper.com/2017/03/parse-csv-data-go-programming-language/?fbclid=IwAR2Bz_BrEl-hDVYoejQrZ44CCyVltHcRyRjg6a_e04pRxOhR6H3mcWHVz1U)
@@ -17,3 +18,5 @@
 - [Golang-design-pattern](https://github.com/senghoo/golang-design-pattern)
 - [Reflections: Golang high level abstractions over reflect library](http://github.com/oleiade/reflections)
 
+## Road map
+![alt text](https://raw.githubusercontent.com/Alikhll/golang-developer-roadmap/master/golang-developer-roadmap.png)
