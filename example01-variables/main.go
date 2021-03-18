@@ -15,7 +15,7 @@ func main() {
 		// - String "" (empty string)
 		// - Pointer nil
 
-		///////////// Khai báo 1 ///////////////// 
+		///////////// Cú pháp khai báo 1 ///////////////// 
 		var a int
 		var b string
 		var c float64
@@ -26,7 +26,7 @@ func main() {
 		fmt.Printf("var c float64 \t %T [%v]\n", c, c)
 		fmt.Printf("var d bool \t %T [%v]\n\n", d, d)
 
-		///////////// Khai báo 2 //////////////////
+		///////////// Cu pháp khai báo 2 //////////////////
 		var aa int = 1
 		var bb string = "hello"
 		var cc float64 = 3.14
@@ -37,7 +37,7 @@ func main() {
 		fmt.Printf("var cc float64 \t %T [%v]\n", cc, cc)
 		fmt.Printf("var dd bool \t %T [%v]\n\n", dd, dd)
 
-		///////////// Khai báo 3 ////////////////// 
+		///////////// Cu pháp khai báo 3 ////////////////// 
 		aaa := 10
 		bbb := "hello"
 		ccc := 3.14159
@@ -47,4 +47,6 @@ func main() {
 		fmt.Printf("bbb := \"hello\" \t %T [%v]\n", bbb, bbb)
 		fmt.Printf("ccc := 3.14159 \t %T [%v]\n", ccc, ccc)
 		fmt.Printf("ddd := true \t %T [%v]\n\n", ddd, ddd)
+
+		/////////// Global and block scope ///////////////
 }
