@@ -1,5 +1,6 @@
 ## Bookmark
-- [Youtube Golang - Nhập Môn Cơ Bản](https://www.youtube.com/watch?v=DH4Yv7uSCco&list=PLw-L1SGSvTEco7QvKTEd39wrMoTCPNUuN)
+- [Youtube Golang - Nhập Môn Cơ Bản 1](https://www.youtube.com/watch?v=E8N7d479z3E)
+- [Youtube Golang - Nhập Môn Cơ Bản 2](https://www.youtube.com/watch?v=DH4Yv7uSCco)
 - [Go – Lập trình Go | Phở Code](https://phocode.com/golang/go-lap-trinh-go/)
 - [Go - golangprograms.com](http://golangprograms.com)
 - [The Ultimate Go Study Guide](https://github.com/ardanlabs/gotraining-studyguide)
