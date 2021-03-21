@@ -3,6 +3,7 @@ package main
 import "fmt"
 
 func main() {
+	// Array là value type chứ không phải là ref tyoe
 	// khai bao array
 	var myArray [4]int
 	fmt.Println(myArray)
