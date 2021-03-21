@@ -1,4 +1,20 @@
 package main
+import (
+	"fmt"
+	"strconv"
+)
+
+//////////// global scope /////////////
+var globalScope int = 100
+
+// export global (viết hoa chữ cái đầu)
+var GlobalScope int = 100
+
+// global block
+var (
+	globalScope1 int = 100
+	globalScope2 int = 100
+)
 
 func main() {
 		// ------------------
@@ -6,8 +22,8 @@ func main() {
 		// ------------------
 
 		// Every single value we create must be initialized. If we don't specify it, it will be set to
-	  // the zero value. The entire allocation of memory, we reset that bit to 0.	
-		
+	  // the zero value. The entire allocation of memory, we reset that bit to 0.
+
 		// - Boolean false
 		// - Integer 0
 		// - Floating Point 0
@@ -15,38 +31,24 @@ func main() {
 		// - String "" (empty string)
 		// - Pointer nil
 
-		///////////// Cú pháp khai báo 1 ///////////////// 
+		///////////// Cú pháp khai báo 1 /////////////////
 		var a int
-		var b string
+		var aa int = 1
+		aaa := 10
 		var c float64
 		var d bool
 
 		fmt.Printf("var a int \t %T [%v]\n", a, a)
-		fmt.Printf("var b string \t %T [%v]\n", b, b)
-		fmt.Printf("var c float64 \t %T [%v]\n", c, c)
-		fmt.Printf("var d bool \t %T [%v]\n\n", d, d)
+		fmt.Printf("var a int \t %T [%v]\n", aa, aa)
+		fmt.Printf("var a int \t %T [%v]\n", aaa, aaa)
+		fmt.Printf("var a int \t %T [%v]\n", lobalScope, lobalScope)
 
-		///////////// Cu pháp khai báo 2 //////////////////
-		var aa int = 1
-		var bb string = "hello"
-		var cc float64 = 3.14
-		var dd bool = true
+		/////////// Naming converstion Camel ///////////////
+		var helloWorld string = "hellworld"
+		var hellNumber int    = 100
 
-		fmt.Printf("var aa int \t %T [%v]\n", aa, aa)
-		fmt.Printf("var bb string \t %T [%v]\n", bb, bb)
-		fmt.Printf("var cc float64 \t %T [%v]\n", cc, cc)
-		fmt.Printf("var dd bool \t %T [%v]\n\n", dd, dd)
-
-		///////////// Cu pháp khai báo 3 ////////////////// 
-		aaa := 10
-		bbb := "hello"
-		ccc := 3.14159
-		ddd := true
-	
-		fmt.Printf("aaa := 10 \t %T [%v]\n", aaa, aaa)
-		fmt.Printf("bbb := \"hello\" \t %T [%v]\n", bbb, bbb)
-		fmt.Printf("ccc := 3.14159 \t %T [%v]\n", ccc, ccc)
-		fmt.Printf("ddd := true \t %T [%v]\n\n", ddd, ddd)
-
-		/////////// Global and block scope ///////////////
+		/////////// Convert Type /////////////////
+		var integer int = 10
+		var float float32 = float32(integer)
+		var string string = strconv.Itoa(integer)
 }
