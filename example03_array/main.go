@@ -4,7 +4,7 @@ import "fmt"
 
 func main(){
 	// Khai báo array và gán giá trị cho array
-	var myArray[3] int
+	var myArray [3]int
 	myArray[0] = 1
 	myArray[1] = 2
 	myArray[2] = 3
