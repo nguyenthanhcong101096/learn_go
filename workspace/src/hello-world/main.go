@@ -15,7 +15,7 @@ import (
 func main() {
 	fmt.Println("this is a main function")
 	helper.ConvertStringToInt()
-	
+
 	validator.CheckValidEmail()
 	validator.CheckValidPhone()
 }
