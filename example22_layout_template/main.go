@@ -17,6 +17,9 @@ type Student struct {
 	Email string
 }
 
+func (s Student) PassMethod() string {
+	return "Pass Method"
+}
 
 func main() {
 	mux := http.NewServeMux()
