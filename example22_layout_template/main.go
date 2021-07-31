@@ -17,9 +17,6 @@ type Student struct {
 	Email string
 }
 
-func indexHandler(w http.ResponseWriter, r *http.Request) {
-	w.Write([]byte("<h1>Hello World!</h1>"))
-}
 
 func main() {
 	mux := http.NewServeMux()
