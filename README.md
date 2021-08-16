@@ -165,3 +165,170 @@
          - [Twirp](https://github.com/twitchtv/twirp)
 
 15. [Go-Patterns](https://github.com/tmrts/go-patterns)
+
+# Coding Standards
+## Tips and Tricks
+- Run [gofmt](https://github.com/golang/go/wiki/CodeReviewComments#gofmt) on your code to automatically fix the majority of mechanical style issues
+- Using [golangci-lint](https://github.com/golangci/golangci-lint)
+## When You In Doubt
+- [CodeReviewComments](https://github.com/golang/go/wiki/CodeReviewComments)
+- [Effective go](https://golang.org/doc/effective_go)
+## Table of Contents
+### Must
+- [Code-Formatting](<#Code-Formatting>)
+- [Naming](#Naming)
+- [Exported-Unexported](#Exported-Unexported)
+- [Line-Length](#Line-Length)
+- [#Receiver-Names](#Receiver-Names)
+- [Type-Assertion](#Type-Assertion)
+- [Contexts](#Contexts)
+- [Rand](#Rand)
+- [Handle-Errors](#Handle-Errors)
+- [Indent-Error-Flow](#Indent-Error-Flow)
+- [Indent Error Flow](#Indent-Error-Flow)
+- [Goroutine-Lifetimes](#Goroutine-Lifetimes)
+- [Goroutines](#Goroutines)
+- [Channel](#Channel)
+- [Unit-test](#Unit-test)
+## Must
+## Code-Formatting
+- Using tab (It's go standard)
+## Naming
+- **Package name**:  short, concise, lower case, single-word, no underscores or mixedCaps
+**Good**: bytes, io, bufio
+**Bad**: Bytes, bufIO, buf_io
+- **Structure name**: don’t use prefix of package name when naming a structure inside package, for instance if we have a package `bufio`
+**Good**: Reader (when we access struct `bufio.Reader`, the package name `bufio` already express `Reader` is reader of buffer io )
+**Bad**: `bufReader`, `bufferReader`
+- **Interface name**: one-method interfaces are named by the method name plus an `-er` suffix or similar modification to construct an agent noun: `Reader`, `Writer`, `Formatter`, `CloseNotifier` etc
+- **MixCaps**: the convention in Go is to use `MixedCaps` or `mixedCaps` rather than underscores to write multi word names
+## Exported-Unexported
+- Only export those variables, constant, methods that provide communication with the package
+## Line-Length
+There is no rigid line length limit in Go code, but avoid uncomfortably long lines. Similarly, don't add line breaks to keep lines short when they are more readable long--for example, if they are repetitive. ([ref](https://github.com/golang/go/wiki/CodeReviewComments#line-length))
+## Receiver-Names
+The name of a method's receiver should be a reflection of its identity; often a one or two letter abbreviation of its type suffices (such as "c" or "cl" for "Client"). Don't use generic names such as "me", "this" or "self", identifiers typical of object-oriented languages that gives the method a special meaning. ([ref](https://github.com/golang/go/wiki/CodeReviewComments#receiver-names))
+## Type-Assertion
+Use the "comma, ok" idiom to test ([ref](https://golang.org/doc/effective_go#interface_conversions)).
+For instance, don't write:
+```go
+str := value.(string)
+```
+Instead, write:
+```go
+str, ok := value.(string)
+```
+Incase want to check more than 1 type, using type swich ([ref](https://golang.org/doc/effective_go#type_switch)):
+```go
+var t interface{}
+t = functionOfSomeType()
+switch t := t.(type) {
+default:
+    fmt.Printf("unexpected type %T\n", t)     // %T prints whatever type t has
+case bool:
+    fmt.Printf("boolean %t\n", t)             // t has type bool
+case int:
+    fmt.Printf("integer %d\n", t)             // t has type int
+case *bool:
+    fmt.Printf("pointer to boolean %t\n", *t) // t has type *bool
+case *int:
+    fmt.Printf("pointer to integer %d\n", *t) // t has type *int
+}
+```
+## Contexts
+Functions that use a Context should accept it as their first parameter ([ref](https://github.com/golang/go/wiki/CodeReviewComments#contexts)):
+```go
+func F(ctx context.Context, /* other arguments */) {}
+```
+## Rand
+Do not use package `math/rand` to generate keys. Unseeded, the generator is completely predictable. Instead, use `crypto/rand`'s Reader ([ref](https://github.com/golang/go/wiki/CodeReviewComments#crypto-rand))
+## Handle-Errors
+Do not discard errors using _ variables. If a function returns an error, check it to make sure the function succeeded. Handle the error, return it, or, in truly exceptional situations, panic.
+## Indent-Error-Flow
+Try to keep the normal code path at a minimal indentation, and indent the error handling, dealing with it first. ([ref](https://github.com/golang/go/wiki/CodeReviewComments#indent-error-flow))
+For instance, don't write:
+```go
+if err != nil {
+	// error handling
+} else {
+	// normal code
+}
+```
+Instead, write:
+```go
+if err != nil {
+	// error handling
+	return // or continue, etc.
+}
+// normal code
+```
+If the `if` statement has an initialization statement, such as:
+```go
+if x, err := f(); err != nil {
+	// error handling
+	return
+} else {
+	// use x
+}
+```
+then this may require moving the short variable declaration to its own line:
+```go
+x, err := f()
+if err != nil {
+	// error handling
+	return
+}
+// use x
+```
+## Goroutine-Lifetimes
+When you spawn goroutines, make it clear when - or whether - they exit. [ref](https://github.com/golang/go/wiki/CodeReviewComments#goroutine-lifetimes)
+## Goroutines
+- passing the value used in goroutine as an argument to the closure in the goroutine
+```go
+func Serve(queue chan *Request) {
+    for req := range queue {
+        sem <- 1
+        go func(req *Request) {
+            process(req)
+            <-sem
+        }(req)
+    }
+}
+```
+- Always use recover in goroutine to handle panic
+```go
+func server(workChan <-chan *Work) {
+    for work := range workChan {
+        go safelyDo(work)
+    }
+}
+
+func safelyDo(work *Work) {
+    defer func() {
+        if err := recover(); err != nil {
+            log.Println("work failed:", err)
+        }
+    }()
+    do(work)
+}
+```
+## Channel
+- Always to close channel if producer not use anymore => help consumer always consume the zero value, reduce deadlock
+```go
+func sq(done <-chan struct{}, in <-chan int) <-chan int {
+    out := make(chan int)
+    go func() {
+        defer close(out)
+        for n := range in {
+            select {
+            case out <- n * n:
+            case <-done:
+                return
+            }
+        }
+    }()
+    return out
+}
+```
+## Unit-test
+- Don't use `gomock.Any` when writing unit test, it accept any value so it cause unit test weak.
